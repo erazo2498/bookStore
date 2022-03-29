@@ -18,7 +18,8 @@ public class BookService {
 	public List<BookEntity> getAllByAuthor(String author) {
 		return bookRepository.findByAuthor(author);
 	}
-	public BookEntity newBook(BookEntity b) {
-		return bookRepository.save(b);
+	public BookEntity newBook(BookEntity book) {
+		return bookRepository.save(book);
 	}
+	public void deleteBook(BookEntity book){bookRepository.delete(book);}
 }
