@@ -6,5 +6,7 @@ import co.saimyr.bookstore.persistence.entity.BookEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CrudBookRepository extends CrudRepository<BookEntity, Integer> {
-	public List<BookEntity> findByAuthor(String author);
+	List<BookEntity> findByAuthor(String author);
+	List<BookEntity> findByOrderByNameAsc();
+    List<BookEntity> findByPublisher(String publisher);
 }

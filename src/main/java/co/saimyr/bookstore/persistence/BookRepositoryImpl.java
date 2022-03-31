@@ -1,8 +1,11 @@
 package co.saimyr.bookstore.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
+import co.saimyr.bookstore.domain.dto.BookDto;
 import co.saimyr.bookstore.persistence.entity.BookEntity;
+import co.saimyr.bookstore.persistence.mapper.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,28 +17,35 @@ public class BookRepositoryImpl implements BookRepository {
 	@Autowired
 	private CrudBookRepository h2BookRepo;
 
+	@Autowired
+	private BookMapper bookMapper;
+
 	@Override
-	public List<BookEntity> findAll() {
-		return (List<BookEntity>) h2BookRepo.findAll();
+	public List<BookDto> findAll() {
+		return bookMapper.toBooksDto(h2BookRepo.findByOrderByNameAsc());
 	}
 	
 	@Override
-	public List<BookEntity> findByAuthor(String author) {
-		return h2BookRepo.findByAuthor(author);
+	public List<BookDto> findByAuthor(String author) {
+		return bookMapper.toBooksDto(h2BookRepo.findByAuthor(author));
 	}
 
 	@Override
-	public List<BookEntity> findByPublisher(String publisher) {
-		return null;
+	public List<BookDto> findByPublisher(String publisher) {
+		return bookMapper.toBooksDto(h2BookRepo.findByPublisher(publisher));
 	}
 
 	@Override
-	public BookEntity save(BookEntity b) {
-		return h2BookRepo.save(b);
+	public BookDto save(BookDto b) {
+		return bookMapper.toBookDto(h2BookRepo.save(bookMapper.toBookEntity(b)));
 	}
 
 	@Override
-	public void delete(BookEntity b) {
+	public void delete(int isbn) {
 
+	}
+	@Override
+	public Optional<BookDto> findByIsbn(int isbn){
+		return h2BookRepo.findById(isbn).map(bookEntity -> bookMapper.toBookDto(bookEntity));
 	}
 }
