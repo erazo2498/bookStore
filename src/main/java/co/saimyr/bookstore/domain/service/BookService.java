@@ -1,6 +1,8 @@
 package co.saimyr.bookstore.domain.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.DoubleStream;
 
 import co.saimyr.bookstore.domain.dto.BookDto;
 import co.saimyr.bookstore.domain.exception.BadRequestException;
@@ -19,7 +21,7 @@ public class BookService {
 	public List<BookDto> getAll() {
 		List<BookDto> bookDtoList = bookRepository.findAll();
 		if (bookDtoList == null || bookDtoList.isEmpty()){
-			throw new NotFoundException("The requested books do not exist");
+			throw new NotFoundException("There are no books yet");
 		}
 		return bookDtoList;
 	}
@@ -47,5 +49,14 @@ public class BookService {
 		}
 		return bookRepository.save(bookDto);
 	}
-	public void deleteBook(int isbn){bookRepository.delete(isbn);}
+	public boolean deleteBook(int isbn){
+		return getBook(isbn).map(product -> {
+			bookRepository.delete(isbn);
+			return true;
+		}).orElse(false);
+	}
+
+	private Optional<BookDto> getBook(int isbn) {
+		return bookRepository.findByIsbn(isbn);
+	}
 }

@@ -42,7 +42,7 @@ public class BookRepositoryImpl implements BookRepository {
 
 	@Override
 	public void delete(int isbn) {
-
+		h2BookRepo.deleteById(isbn);
 	}
 	@Override
 	public Optional<BookDto> findByIsbn(int isbn){
